@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BFHL — Node Hierarchy Explorer</title>
+  <meta name="description" content="Chitkara Full Stack Challenge — Visualize hierarchical node relationships with tree detection, cycle detection, and structured insights." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Background Orbs ─────────────────────────────────────────────── -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- ── Header ──────────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/>
+            <line x1="12" y1="8" x2="5.5" y2="16.5"/><line x1="12" y1="8" x2="18.5" y2="16.5"/>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-name">BFHL</span>
+          <span class="brand-sub">Node Hierarchy Explorer</span>
+        </div>
+      </div>
+      <div class="header-badge">Chitkara × Bajaj Finserv</div>
+    </div>
+  </header>
+
+  <!-- ── Main ────────────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1 class="hero-title">
+        Visualize Node
+        <span class="gradient-text">Hierarchies</span>
+      </h1>
+      <p class="hero-subtitle">
+        Enter a list of directed edges to detect trees, cycles, and build structured insights in real time.
+      </p>
+    </section>
+
+    <!-- Input Card -->
+    <section class="input-section">
+      <div class="card input-card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Input Nodes
+          </h2>
+          <button class="btn-ghost" id="btn-example" title="Load example">Load Example</button>
+        </div>
+
+        <form id="input-form">
+          <div class="textarea-wrap">
+            <textarea
+              id="node-input"
+              class="node-textarea"
+              placeholder='Enter edges separated by commas or new lines&#10;e.g.  A->B, A->C, B->D, C->E&#10;&#10;Or paste a JSON array:&#10;["A->B", "A->C", "B->D"]'
+              spellcheck="false"
+              rows="7"
+            ></textarea>
+            <div class="textarea-hint">
+              Format: <code>X->Y</code> where X and Y are single uppercase letters (A–Z)
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <div class="api-url-wrap">
+              <label class="api-label" for="api-url">API URL</label>
+              <input type="text" id="api-url" class="api-input" value="http://localhost:3000" placeholder="http://localhost:3000" />
+            </div>
+            <button type="submit" class="btn-primary" id="submit-btn">
+              <span class="btn-text">Analyze</span>
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <span class="btn-loader hidden" id="btn-loader">
+                <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Error Banner -->
+      <div class="error-banner hidden" id="error-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="error-message">Something went wrong.</span>
+        <button class="error-close" id="error-close">✕</button>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section hidden" id="results-section">
+
+      <!-- User Info Strip -->
+      <div class="user-strip">
+        <div class="user-chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span id="res-user-id">—</span>
+        </div>
+        <div class="user-chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+          <span id="res-email">—</span>
+        </div>
+        <div class="user-chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="12" y2="17"/></svg>
+          <span id="res-roll">—</span>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="summary-grid" id="summary-grid">
+        <div class="summary-card card-trees">
+          <div class="summary-icon">🌲</div>
+          <div class="summary-number" id="sum-trees">0</div>
+          <div class="summary-label">Total Trees</div>
+        </div>
+        <div class="summary-card card-cycles">
+          <div class="summary-icon">🔄</div>
+          <div class="summary-number" id="sum-cycles">0</div>
+          <div class="summary-label">Total Cycles</div>
+        </div>
+        <div class="summary-card card-root">
+          <div class="summary-icon">🏆</div>
+          <div class="summary-number" id="sum-root">—</div>
+          <div class="summary-label">Largest Tree Root</div>
+        </div>
+      </div>
+
+      <!-- Hierarchies -->
+      <div class="section-block" id="hierarchies-block">
+        <h2 class="section-heading">
+          <span class="section-dot dot-indigo"></span>
+          Hierarchies
+        </h2>
+        <div class="hierarchies-grid" id="hierarchies-grid"></div>
+      </div>
+
+      <!-- Invalid Entries -->
+      <div class="section-block hidden" id="invalid-block">
+        <h2 class="section-heading">
+          <span class="section-dot dot-rose"></span>
+          Invalid Entries
+        </h2>
+        <div class="tags-row" id="invalid-tags"></div>
+      </div>
+
+      <!-- Duplicate Edges -->
+      <div class="section-block hidden" id="duplicate-block">
+        <h2 class="section-heading">
+          <span class="section-dot dot-amber"></span>
+          Duplicate Edges
+        </h2>
+        <div class="tags-row" id="duplicate-tags"></div>
+      </div>
+
+      <!-- Raw JSON -->
+      <div class="section-block">
+        <div class="raw-header">
+          <h2 class="section-heading" style="margin:0">
+            <span class="section-dot dot-slate"></span>
+            Raw JSON Response
+          </h2>
+          <button class="btn-ghost" id="btn-copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <pre class="json-block" id="raw-json"></pre>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Built for <strong>Bajaj Finserv × Chitkara</strong> Engineering Challenge · Round 1</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
