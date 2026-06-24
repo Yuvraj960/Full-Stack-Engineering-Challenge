@@ -51,11 +51,8 @@
 
 | Resource | URL |
 |----------|-----|
-| 🖥️ **Frontend** | *(update after Netlify deploy)* |
-| 🔌 **API Base** | *(update after Render deploy)* |
-| 📂 **GitHub** | *(your public repo URL)* |
-
-> Submit these three URLs in the Bajaj Finserv submission form.
+| 🖥️ **Frontend** | [Link](https://bajaj-finserv-fullstack-api.netlify.app/) |
+| 🔌 **API Base** | [Link](https://full-stack-engineering-challenge-8cow.onrender.com) |
 
 ---
 
@@ -247,8 +244,8 @@ If two trees share the same depth, `largest_tree_root` is set to the **lexicogra
 ### 1 · Clone
 
 ```bash
-git clone https://github.com/<your-username>/bfhl-challenge.git
-cd bfhl-challenge
+git clone https://github.com/<your-username>/Full-Stack-Engineering-Challenge.git
+cd Full-Stack-Engineering-Challenge.git
 ```
 
 ### 2 · Install & Run the Backend
